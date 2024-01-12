@@ -6,7 +6,7 @@ Navigate to the folder containing PySpin and install using pip:
 ```commandline
 pip install <name_of_installation>.whl
 ```
-Install simple pyspin, opencv and pyyaml:
+Install [simple-pyspin](https://pypi.org/project/simple-pyspin/), opencv and pyyaml:
 ```commandline
 pip install simple-pyspin
 pip install opencv-python
