@@ -122,7 +122,7 @@ class DummyWriter:
         return
 
 
-def record_video(output_path, duration, camera_id=0, display_video=False, codec="XVID", **camera_params):
+def record_video(output_path, duration, camera_id=0, display_video=False, codec="XVID", downsample=0, **camera_params):
     """Record a video for the given duration (seconds)."""
     camera = Camera(camera_id)
     with camera as cam:
@@ -135,7 +135,9 @@ def record_video(output_path, duration, camera_id=0, display_video=False, codec=
             output_path = str(output_path)
             fourcc = cv2.VideoWriter_fourcc(*codec)
             writer = cv2.VideoWriter(str(output_path), fourcc, frame_rate, frame_size, False)
+            min, sec = divmod(duration, 60) if duration else ("inf", "inf")
             print("Starting recording:", Path(output_path).name)
+            print("Time (min:sec):", f"{min}:{sec}")
         else:
             writer = DummyWriter()
             display_video = True
@@ -148,7 +150,10 @@ def record_video(output_path, duration, camera_id=0, display_video=False, codec=
             frame = camera.read()
             writer.write(frame)
             if display_video:
-                cv2.imshow(str(output_path), frame[::2, ::2])
+                show_img = frame
+                if downsample:
+                    show_img = show_img[::downsample, ::downsample]
+                cv2.imshow(str(output_path), show_img)
                 k = cv2.waitKey(1)
                 if k > 0:
                     print("Keyboard interrupt")

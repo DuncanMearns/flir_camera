@@ -7,5 +7,6 @@ camera_params:
   offsets: [0, 0]  # x_offset, y_offset
 video_params:
   display_video: True  # show video while recording in progress
+  display_downsample: 2  # factor for downsampling video for display
   codec: XVID  # codec for saving videos (e.g. XVID, MPEG)
   file_extension: avi  # file extention for saving videos (e.g. mp4, avi)

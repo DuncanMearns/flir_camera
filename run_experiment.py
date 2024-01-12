@@ -7,7 +7,7 @@ import sys
 if __name__ == '__main__':
 
     FILENAME = "test"
-    DURATION = 5  # minutes
+    DURATION = None  # minutes
     PARAMS_PATH = "params.yml"
 
     # ============================================
@@ -23,11 +23,13 @@ if __name__ == '__main__':
         data = yaml.safe_load(stream)
 
     # Get params
+    camera_id = data["camera_id"]
     camera_params = data["camera_params"]
     video_params = data["video_params"]
     display_video = video_params["display_video"]
     codec = video_params["codec"]
     extension = video_params["file_extension"]
+    downsample = video_params["display_downsample"]
 
     # Set directory and check file exists
     directory = Path(data["working_directory"])
@@ -35,10 +37,10 @@ if __name__ == '__main__':
         directory.mkdir(parents=True)
     path = directory.joinpath(filename).with_suffix("." + extension)
     if path.exists():
-        print("File already exists!")
+        print("File already exists!", path)
         sys.exit(1)
 
     duration_seconds = int(duration_minutes * 60) if duration_minutes else None
 
     # Record
-    record_video(path, duration_seconds, display_video=display_video, **camera_params)
+    record_video(path, duration_seconds, camera_id, display_video, codec, downsample, **camera_params)
