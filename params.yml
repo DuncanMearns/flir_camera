@@ -1,0 +1,8 @@
+working_directory: D:/d_willistoni/test  # where videos will be saved
+camera_id: 0  # camera id (if multiple cameras connected)
+display_video: False  # show video while recording in progress
+camera_params:
+  frame_size: [800, 600]  # width, height
+  frame_rate: 40.  # frames per second
+  exposure: 20_000  # microseconds
+  offsets: [200, 450]  # x_offset, y_offset

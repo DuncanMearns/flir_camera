@@ -1,29 +1,40 @@
-from flir_camera import check_camera_params, record_video
+from flir_camera import record_video
 from pathlib import Path
+import yaml
+import sys
 
 
 if __name__ == '__main__':
 
-    params = {
-        "frame_size": (800, 600),
-        "frame_rate": 40.,
-        "exposure": 20_000,
-        "offsets": (200, 450)
-    }
+    FILENAME = "test"
+    DURATION = 5  # minutes
+    PARAMS_PATH = "params.yml"
 
-    SHOW_VIDEO = True
-    RECORDING_TIME = 5  # minutes
-    WORKING_DIRECTORY = "D:/d_willistoni/"  # where videos will be saved
-    FILENAME = "test"  # basename of the file
+    # ============================================
 
-    # =============================================
+    # Parse arguments from command line (if given)
+    args = sys.argv[1:]
+    params_path = args[0] if args else PARAMS_PATH
+    filename = args[1] if args else FILENAME
+    duration_minutes = args[2] if args else DURATION
 
-    directory = Path(WORKING_DIRECTORY)
+    # Open params
+    with open(params_path, "r") as stream:
+        data = yaml.safe_load(stream)
+
+    # Set directory and check file exists
+    directory = Path(data["working_directory"])
     if not directory.exists():
         directory.mkdir(parents=True)
-    path = directory.joinpath(FILENAME)
-    path = path.with_suffix(".avi")
+    path = directory.joinpath(filename).with_suffix(".avi")
+    if path.exists():
+        print("File already exists!")
+        sys.exit(1)
 
-    # check_camera_params(**params)
-    record_video(path, 10,
-                 display_video=SHOW_VIDEO, **params)
+    # Get params
+    params = data["camera_params"]
+    display_video = data["display_video"]
+    duration_seconds = duration_minutes * 60
+
+    # Record
+    record_video(path, duration_seconds, display_video=display_video, **params)
