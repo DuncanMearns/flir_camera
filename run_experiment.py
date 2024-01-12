@@ -22,19 +22,23 @@ if __name__ == '__main__':
     with open(params_path, "r") as stream:
         data = yaml.safe_load(stream)
 
+    # Get params
+    camera_params = data["camera_params"]
+    video_params = data["video_params"]
+    display_video = video_params["display_video"]
+    codec = video_params["codec"]
+    extension = video_params["file_extension"]
+
     # Set directory and check file exists
     directory = Path(data["working_directory"])
     if not directory.exists():
         directory.mkdir(parents=True)
-    path = directory.joinpath(filename).with_suffix(".avi")
+    path = directory.joinpath(filename).with_suffix("." + extension)
     if path.exists():
         print("File already exists!")
         sys.exit(1)
 
-    # Get params
-    params = data["camera_params"]
-    display_video = data["display_video"]
-    duration_seconds = duration_minutes * 60
+    duration_seconds = int(duration_minutes * 60) if duration_minutes else None
 
     # Record
-    record_video(path, duration_seconds, display_video=display_video, **params)
+    record_video(path, duration_seconds, display_video=display_video, **camera_params)

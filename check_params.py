@@ -1,4 +1,4 @@
-from flir_camera import check_camera_params
+from flir_camera import record_video
 import yaml
 import sys
 
@@ -19,4 +19,4 @@ if __name__ == "__main__":
     camera_params = data["camera_params"]
 
     # Check frame from camera with given params
-    check_camera_params(**camera_params)
+    record_video(None, None, **camera_params)

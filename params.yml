@@ -1,8 +1,11 @@
 working_directory: D:/test_videos  # where videos will be saved
 camera_id: 0  # camera id (if multiple cameras connected)
-display_video: False  # show video while recording in progress
 camera_params:
-  frame_size: [800, 600]  # width, height
-  frame_rate: 40.  # frames per second
-  exposure: 20_000  # microseconds
-  offsets: [200, 450]  # x_offset, y_offset
+  frame_size: [1024, 1024]  # width, height
+  frame_rate: 60.  # frames per second
+  exposure: 15_000  # microseconds
+  offsets: [0, 0]  # x_offset, y_offset
+video_params:
+  display_video: True  # show video while recording in progress
+  codec: XVID  # codec for saving videos (e.g. XVID, MPEG)
+  file_extension: avi  # file extention for saving videos (e.g. mp4, avi)

@@ -113,7 +113,16 @@ class Infinity(float):
         return True
 
 
-def record_video(output_path, duration, camera_id=0, display_video=False, **camera_params):
+class DummyWriter:
+
+    def write(self, *args):
+        return
+
+    def release(self):
+        return
+
+
+def record_video(output_path, duration, camera_id=0, display_video=False, codec="XVID", **camera_params):
     """Record a video for the given duration (seconds)."""
     camera = Camera(camera_id)
     with camera as cam:
@@ -122,11 +131,14 @@ def record_video(output_path, duration, camera_id=0, display_video=False, **came
         frame_rate = cam.get("frame_rate")
         frame_size = cam.get("frame_size")
         # create output video
-        output_path = str(output_path)
-        fourcc = cv2.VideoWriter_fourcc(*"XVID")
-        writer = cv2.VideoWriter(str(output_path), fourcc, frame_rate, frame_size, False)
-        # Save video
-        print("Starting recording:", Path(output_path).name)
+        if output_path:
+            output_path = str(output_path)
+            fourcc = cv2.VideoWriter_fourcc(*codec)
+            writer = cv2.VideoWriter(str(output_path), fourcc, frame_rate, frame_size, False)
+            print("Starting recording:", Path(output_path).name)
+        else:
+            writer = DummyWriter()
+            display_video = True
         if duration is None:
             display_video = True
         t_end = time.time() + duration if duration is not None else Infinity()
@@ -143,4 +155,5 @@ def record_video(output_path, duration, camera_id=0, display_video=False, **came
                     break
         cv2.destroyAllWindows()
         writer.release()
-        print("Recording finished")
+        if output_path:
+            print("Recording finished")
